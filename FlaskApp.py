@@ -1,44 +1,15 @@
 import os
-from flask import Flask, render_template, abort, url_for, json, jsonify, redirect
+from flask import Flask, render_template, abort, url_for, json, jsonify, redirect, request  
 import json
 import html
-app = Flask(__name__)
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import scan
-import pandas as pd
+from FetchingLogs import get_data_from_elastic
+
+app = Flask(__name__)
 
 es = Elasticsearch("https://exl.workbench.couture.ai/elastic/")
-
-def get_data_from_elastic(log):
-   
-   #Fetching Queries on the basis of App keyword
-   query = {
-        "query": {
-            "match": {
-                "app.keyword": log
-            }
-        }
-    }
-
-    # Scan function to get all the data. 
-    
-   result = scan(client=es,             
-               query=query,                                     
-               scroll='1m', 
-               index='fluent-bit',
-               raise_on_error=True,
-               preserve_order=False,
-               clear_scroll=True)
-
-   # Keep response in a list.
-   
-   # list = []
-   # for hit in result:
-   #      list.append(hit['_source'])
-
-
-   return result['_source']
-
+print(f"Connected to ElasticSearch cluster `{es.info().body['cluster_name']}`")
 
 @app.route('/admin')
 def base_log():
@@ -46,8 +17,13 @@ def base_log():
 
 @app.route('/app/<log>')
 def system_log(log):
-   this_log = get_data_from_elastic(log)
-   return render_template('index.html', title="page", jsonfile=json.dumps(this_log))
+   logdata = request.args.get('logdata')
+   logs = request.args.get('log')
+   stream = request.args.get('stream')
+   # time = request.args.get('time') # tokens = qu.split(" ")
+   this_log = get_data_from_elastic(log, logdata, logs, stream)
+   # return render_template('index.html', title="page", jsonfile=json.dumps(this_log))
+   return this_log
    
 
 @app.route('/logs/<log>')
