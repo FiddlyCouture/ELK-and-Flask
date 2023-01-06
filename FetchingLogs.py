@@ -7,10 +7,10 @@ from multidict import *
 es = Elasticsearch("https://exl.workbench.couture.ai/elastic/")
 
 
-def getDataFromElastic(log, token, time, limit):
+def get_data_from_elastic(log, token, time, limit):
     
     
-    query = queryBuilder(log, token, time, limit)
+    query = query_builder(log, token, time, limit)
     
     
     result = scan(client=es,             
@@ -28,7 +28,7 @@ def getDataFromElastic(log, token, time, limit):
 
     return result
 
-# getDataFromElastic('workflow-scheduler', MultiDict([('stream', 'stderr')]), time = None,limit= 100)
+# get_data_from_elastic('workflow-scheduler', MultiDict([('stream', 'stderr')]), time = None,limit= 100)
    
 
 # if __name__ == "__main__":

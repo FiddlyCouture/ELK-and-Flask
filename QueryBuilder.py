@@ -1,7 +1,7 @@
 from elasticsearchquerygenerator.elasticsearchquerygenerator import ElasticSearchQuery
 import json
 
-def queryBuilder(log, token, time, limit):
+def query_builder(log, token, time, limit):
     helper = ElasticSearchQuery(size=limit, BucketName="Kibana", min_score=0.2)
 
         # match phrase

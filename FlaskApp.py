@@ -24,7 +24,7 @@ def system_log(log):
    if Limit:
       key1 = request.args.to_dict().pop('limit', None)
 
-   this_log = FetchingLogs.getDataFromElastic(log, request.args, times, Limit)
+   this_log = FetchingLogs.get_data_from_elastic(log, request.args, times, Limit)
    
    return this_log
    
